@@ -56,7 +56,7 @@
           }
         },
         "number": {
-            "type": "text"
+            "type": "keyword"
         },
         "funder": {
           "type": "object",

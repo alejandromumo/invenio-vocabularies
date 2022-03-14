@@ -55,12 +55,7 @@
         }
       },
       "number": {
-        "type": "text",
-        "properties": {
-          "en": {
-            "type": "search_as_you_type"
-          }
-        }
+        "type": "keyword"
       },
       "funder": {
         "type": "object",

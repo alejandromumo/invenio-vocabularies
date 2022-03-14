@@ -26,13 +26,17 @@ grant_schemes = LocalProxy(
 class GrantsSearchOptions(SearchOptions):
     """Search options."""
 
-    # QUESTION IS IT? it will search using title.* in 2/3  shingles
-    # QUESTION ^100 is correct?
+    # QUESTION ask alex about what's useful for the domain
+    # QUESTION mappings number either a text or keyword
     suggest_parser_cls = SuggestQueryParser.factory(
         fields=[
-            'title.*^100',
+            'title.*^50',
             'title.*._2gram',
             'title.*._3gram',
+            'number^10',
+            'funder.name^5',
+            'funder.name._2gram',
+            'funder.name._3gram',
         ],
     )
 
@@ -45,7 +49,7 @@ class GrantsSearchOptions(SearchOptions):
             title=_('Best match'),
             fields=['_score'],  # ES defaults to desc on `_score` field
         ),
-        # QUESTION removed sort option for title. This can be removed since that's the default behavior in parent's class. Is it ok?
+        # QUESTION ask alex about what's useful for the domain. Either number or nothing at all and assume defaults from SearchOptions parent object?
         "newest": dict(
             title=_('Newest'),
             fields=['-created'],

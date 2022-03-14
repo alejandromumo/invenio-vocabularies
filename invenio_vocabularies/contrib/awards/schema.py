@@ -29,7 +29,6 @@ class AwardSchema(BaseVocabularySchema):
             identifier_required=False
         )
     ))
-    # QUESTION sanitized unicode? why not a number, and why not validate it? e.g. negative numbers are not allowed
     number = SanitizedUnicode(
         required=True,
         validate=validate.Length(min=1, error=_('Number cannot be blank.'))
@@ -45,16 +44,13 @@ class AwardRelationSchema(Schema):
     number = SanitizedUnicode()
     title = i18n_strings
 
-    # QUESTION is it?
     @validates_schema
     def validate_data(self, data, **kwargs):
         """Validate either id or number/title are present."""
         id_ = data.get("id")
         number = data.get("number")
         title = data.get("title")
-        if (id_):
-            pass
-        elif number and title:
+        if (id_) or (number and title):
             pass
         else:
             raise ValidationError(

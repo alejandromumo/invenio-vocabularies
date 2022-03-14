@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2021 CERN.
+# Copyright (C) 2021-2022 CERN.
 #
 # Invenio-Vocabularies is free software; you can redistribute it and/or
 # modify it under the terms of the MIT License; see LICENSE file for more
@@ -9,26 +9,58 @@
 """Awards schema."""
 
 from flask_babelex import lazy_gettext as _
+from functools import partial
 from marshmallow import Schema, ValidationError, fields, validate, \
     validates_schema
-from marshmallow_utils.fields import SanitizedUnicode
+from marshmallow_utils.fields import IdentifierSet, SanitizedUnicode
+from marshmallow_utils.schemas import IdentifierSchema
 
-from ..funders.schema import FunderRelationSchema
+from .config import grant_schemes
+from ..funders.schema import FunderRelationSchema, FunderSchema
+from ...services.schema import BaseVocabularySchema, i18n_strings
 
 
-class AwardRelationSchema(Schema):
+class AwardSchema(BaseVocabularySchema):
     """Award schema."""
-
-    title = SanitizedUnicode(
-        required=True,
-        validate=validate.Length(min=1, error=_('Title cannot be blank.'))
-    )
+    identifiers = IdentifierSet(fields.Nested(
+        partial(
+            IdentifierSchema,
+            allowed_schemes=grant_schemes,
+            identifier_required=False
+        )
+    ))
+    # QUESTION sanitized unicode? why not a number, and why not validate it? e.g. negative numbers are not allowed
     number = SanitizedUnicode(
         required=True,
         validate=validate.Length(min=1, error=_('Number cannot be blank.'))
     )
-    scheme = SanitizedUnicode()
-    identifier = SanitizedUnicode()
+    # QUESTION optional for now? everything here seems required
+    funder = fields.Nested(FunderSchema)
+
+
+class AwardRelationSchema(Schema):
+    """Award relation schema."""
+
+    id = SanitizedUnicode()
+    number = SanitizedUnicode()
+    title = i18n_strings
+
+    # QUESTION is it?
+    @validates_schema
+    def validate_data(self, data, **kwargs):
+        """Validate either id or number/title are present."""
+        id_ = data.get("id")
+        number = data.get("number")
+        title = data.get("title")
+        if (id_):
+            pass
+        elif number and title:
+            pass
+        else:
+            raise ValidationError(
+                    _("An existing id or number/title must be present."),
+                    "awards"
+            )
 
 
 class FundingRelationSchema(Schema):

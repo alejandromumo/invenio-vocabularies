@@ -7,23 +7,23 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""Test the grant vocabulary service."""
+"""Test the award vocabulary service."""
 
 import pytest
 from invenio_pidstore.errors import PIDAlreadyExists, PIDDeletedError
 from marshmallow.exceptions import ValidationError
 
-from invenio_vocabularies.contrib.awards.api import Grant
+from invenio_vocabularies.contrib.awards.api import Award
 
 
-def test_simple_flow(app, db, service, identity, grant_full_data):
+def test_simple_flow(app, db, service, identity, award_full_data):
     """Test a simple vocabulary service flow."""
     # Create it
-    item = service.create(identity, grant_full_data)
+    item = service.create(identity, award_full_data)
     number = item.number
 
-    assert item.number == grant_full_data['number']
-    for k, v in grant_full_data.items():
+    assert item.number == award_full_data['number']
+    for k, v in award_full_data.items():
         assert item.data[k] == v
 
     # Read it
@@ -32,7 +32,7 @@ def test_simple_flow(app, db, service, identity, grant_full_data):
     assert item.data == read_item.data
 
     # Refresh index to make changes live.
-    Grant.index.refresh()
+    Award.index.refresh()
 
     # Search it
     res = service.search(
@@ -51,7 +51,7 @@ def test_simple_flow(app, db, service, identity, grant_full_data):
     assert service.delete(identity, number)
 
     # Refresh to make changes live
-    Grant.index.refresh()
+    Award.index.refresh()
 
     # Fail to retrieve it
     # - db
@@ -63,16 +63,16 @@ def test_simple_flow(app, db, service, identity, grant_full_data):
 
 
 def test_pid_already_registered(
-    app, db, service, identity, grant_full_data
+    app, db, service, identity, award_full_data
 ):
     """Recreating a record with same id should fail."""
-    service.create(identity, grant_full_data)
+    service.create(identity, award_full_data)
     pytest.raises(
-        PIDAlreadyExists, service.create, identity, grant_full_data)
+        PIDAlreadyExists, service.create, identity, award_full_data)
 
 
-def test_extra_fields(app, db, service, identity, grant_full_data):
+def test_extra_fields(app, db, service, identity, award_full_data):
     """Extra fields in data should fail."""
-    grant_full_data['invalid'] = 1
+    award_full_data['invalid'] = 1
     pytest.raises(
-        ValidationError, service.create, identity, grant_full_data)
+        ValidationError, service.create, identity, award_full_data)

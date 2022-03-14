@@ -15,7 +15,7 @@ from marshmallow import Schema, ValidationError, fields, validate, \
 from marshmallow_utils.fields import IdentifierSet, SanitizedUnicode
 from marshmallow_utils.schemas import IdentifierSchema
 
-from .config import grant_schemes
+from .config import award_schemes
 from ..funders.schema import FunderRelationSchema, FunderSchema
 from ...services.schema import BaseVocabularySchema, i18n_strings
 
@@ -25,7 +25,7 @@ class AwardSchema(BaseVocabularySchema):
     identifiers = IdentifierSet(fields.Nested(
         partial(
             IdentifierSchema,
-            allowed_schemes=grant_schemes,
+            allowed_schemes=award_schemes,
             identifier_required=False
         )
     ))

@@ -6,7 +6,7 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""Vocabulary grants configuration."""
+"""Vocabulary awards configuration."""
 
 from flask import current_app
 from flask_babelex import lazy_gettext as _
@@ -18,12 +18,12 @@ from werkzeug.local import LocalProxy
 
 from ...services.components import PIDComponent
 
-grant_schemes = LocalProxy(
-     lambda: current_app.config["VOCABULARIES_GRANT_SCHEMES"]
+award_schemes = LocalProxy(
+     lambda: current_app.config["VOCABULARIES_AWARD_SCHEMES"]
 )
 
 
-class GrantsSearchOptions(SearchOptions):
+class AwardsSearchOptions(SearchOptions):
     """Search options."""
 
     # QUESTION ask alex about what's useful for the domain

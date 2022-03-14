@@ -6,4 +6,4 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""Grants JSONSchemas module."""
+"""Awards JSONSchemas module."""

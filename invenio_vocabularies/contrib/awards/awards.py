@@ -6,18 +6,18 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""Vocabulary grants."""
+"""Vocabulary awards."""
 
 from invenio_records_resources.factories.factory import RecordTypeFactory
 
 from ...records.pidprovider import PIDProviderFactory
 from ...records.systemfields import BaseVocabularyPIDFieldContext
 from ...services.permissions import PermissionPolicy
-from .config import GrantsSearchOptions, service_components
-from .schema import GrantSchema
+from .config import AwardsSearchOptions, service_components
+from .schema import AwardSchema
 
 record_type = RecordTypeFactory(
-    "Grant",
+    "Award",
     # Data layer
     pid_field_kwargs={
         "create": False,
@@ -25,12 +25,12 @@ record_type = RecordTypeFactory(
         "context_cls": BaseVocabularyPIDFieldContext,
     },
     schema_version="1.0.0",
-    schema_path="local://grants/grant-v1.0.0.json",
+    schema_path="local://awards/award-v1.0.0.json",
     # Service layer
-    service_schema=GrantSchema,
-    search_options=GrantsSearchOptions,
+    service_schema=AwardSchema,
+    search_options=AwardsSearchOptions,
     service_components=service_components,
     permission_policy_cls=PermissionPolicy,
     # Resource layer
-    endpoint_route='/grants',
+    endpoint_route='/awards',
 )

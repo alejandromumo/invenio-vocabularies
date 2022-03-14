@@ -7,10 +7,10 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""Grant vocabulary resources."""
+"""Award vocabulary resources."""
 
-from .grants import record_type
+from .awards import record_type
 
-GrantsResourceConfig = record_type.resource_config_cls
+AwardsResourceConfig = record_type.resource_config_cls
 
-GrantsResource = record_type.resource_cls
+AwardsResource = record_type.resource_cls

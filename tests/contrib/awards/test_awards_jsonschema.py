@@ -6,29 +6,29 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""Grants JSONSchema tests."""
+"""Awards JSONSchema tests."""
 
 import pytest
 from jsonschema.exceptions import ValidationError
 
-from invenio_vocabularies.contrib.awards.api import Grant
+from invenio_vocabularies.contrib.awards.api import Award
 
 
 @pytest.fixture(scope="module")
 def schema():
     """Returns the schema location."""
-    return "local://grants/grant-v1.0.0.json"
+    return "local://awards/award-v1.0.0.json"
 
 
 def validates(data):
-    """Validates grant data."""
-    Grant(data).validate()
+    """Validates award data."""
+    Award(data).validate()
 
     return True
 
 
 def fails(data):
-    """Validates grant data."""
+    """Validates award data."""
     pytest.raises(ValidationError, validates, data)
     return True
 
@@ -46,7 +46,7 @@ def test_valid_full(appctx, schema):
             "obj_type": "aff"
         },
         "title": {
-            "en": "Test grant"
+            "en": "Test award"
         },
         "number": "1000",
         "funder": {
@@ -66,7 +66,7 @@ def test_valid_empty(appctx, schema):
     assert validates(data)
 
 
-# only number is defined by the grant schema
+# only number is defined by the award schema
 # the rest are inherited and should be tested elsewhere
 
 

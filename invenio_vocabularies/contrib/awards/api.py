@@ -6,9 +6,9 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""Vocabulary grants."""
+"""Vocabulary awards."""
 
 
-from .grants import record_type
+from .awards import record_type
 
-Grant = record_type.record_cls
+Award = record_type.record_cls

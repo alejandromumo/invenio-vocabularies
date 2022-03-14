@@ -15,9 +15,9 @@ fixtures are available.
 import pytest
 
 from invenio_vocabularies.contrib.awards.resources import \
-    GrantsResource, GrantsResourceConfig
+    AwardsResource, AwardsResourceConfig
 from invenio_vocabularies.contrib.awards.services import \
-    GrantsService, GrantsServiceConfig
+    AwardsService, AwardsServiceConfig
 
 
 @pytest.fixture(scope="module")
@@ -25,22 +25,22 @@ def extra_entry_points():
     """Extra entry points to load the mock_module features."""
     return {
         "invenio_db.models": [
-            "grants = invenio_vocabularies.contrib.grants.models",
+            "awards = invenio_vocabularies.contrib.awards.models",
         ],
         "invenio_jsonschemas.schemas": [
-            "grants = \
-                invenio_vocabularies.contrib.grants.jsonschemas",
+            "awards = \
+                invenio_vocabularies.contrib.awards.jsonschemas",
         ],
         "invenio_search.mappings": [
-            "grants = \
-                invenio_vocabularies.contrib.grants.mappings",
+            "awards = \
+                invenio_vocabularies.contrib.awards.mappings",
         ]
     }
 
 
 @pytest.fixture(scope="function")
-def grant_full_data():
-    """Full grant data."""
+def award_full_data():
+    """Full award data."""
     return {
         "identifiers": [
             {"identifier": "03yrm5c26", "scheme": "ror"}
@@ -52,7 +52,7 @@ def grant_full_data():
             "obj_type": "aff"
         },
         "title": {
-            "en": "Test grant"
+            "en": "Test award"
         },
         "number": "B1000",
         "funder": {
@@ -63,23 +63,23 @@ def grant_full_data():
 
 @pytest.fixture(scope='module')
 def service():
-    """Grants service object."""
-    return GrantsService(config=GrantsServiceConfig)
+    """Awards service object."""
+    return AwardsService(config=AwardsServiceConfig)
 
 
 @pytest.fixture(scope="module")
 def resource(service):
-    """Grants resource object."""
-    return GrantsResource(GrantsResourceConfig, service)
+    """Awards resource object."""
+    return AwardsResource(AwardsResourceConfig, service)
 
 
 @pytest.fixture(scope="module")
 def base_app(base_app, resource, service):
     """Application factory fixture.
 
-    Registers grants' resource and service.
+    Registers awards' resource and service.
     """
     base_app.register_blueprint(resource.as_blueprint())
     registry = base_app.extensions['invenio-records-resources'].registry
-    registry.register(service, service_id='grants-service')
+    registry.register(service, service_id='awards-service')
     yield base_app

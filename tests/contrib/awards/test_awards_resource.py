@@ -7,73 +7,73 @@
 # modify it under the terms of the MIT License; see LICENSE file for more
 # details.
 
-"""Test the grant vocabulary resource."""
+"""Test the award vocabulary resource."""
 
 import json
 from copy import deepcopy
 
 import pytest
 
-from invenio_vocabularies.contrib.awards.api import Grant
+from invenio_vocabularies.contrib.awards.api import Award
 
 
 @pytest.fixture(scope="module")
 def prefix():
     """API prefix."""
-    return "grants"
+    return "awards"
 
 
 @pytest.fixture()
-def example_grant(
-    app, db, es_clear, identity, service, grant_full_data
+def example_award(
+    app, db, es_clear, identity, service, award_full_data
 ):
-    """Example grant."""
-    grant = service.create(identity, grant_full_data)
-    Grant.index.refresh()  # Refresh the index
+    """Example award."""
+    award = service.create(identity, award_full_data)
+    Award.index.refresh()  # Refresh the index
 
-    return grant
+    return award
 
 
-def test_grants_invalid(client, h, prefix):
+def test_awards_invalid(client, h, prefix):
     """Test invalid type."""
     # invalid type
     res = client.get(f"{prefix}/invalid", headers=h)
     assert res.status_code == 404
 
 
-def test_grants_forbidden(
-    client, h, prefix, example_grant, grant_full_data
+def test_awards_forbidden(
+    client, h, prefix, example_award, award_full_data
 ):
     """Test invalid type."""
     # invalid type
-    grant_full_data_too = deepcopy(grant_full_data)
-    grant_full_data_too["number"] = "other"
+    award_full_data_too = deepcopy(award_full_data)
+    award_full_data_too["number"] = "other"
     res = client.post(
-        f"{prefix}", headers=h, data=json.dumps(grant_full_data_too))
+        f"{prefix}", headers=h, data=json.dumps(award_full_data_too))
     assert res.status_code == 403
 
     res = client.put(
-        f"{prefix}/cern", headers=h, data=json.dumps(grant_full_data))
+        f"{prefix}/cern", headers=h, data=json.dumps(award_full_data))
     assert res.status_code == 403
 
     res = client.delete(f"{prefix}/cern")
     assert res.status_code == 403
 
 
-def test_grants_get(client, example_grant, h, prefix):
+def test_awards_get(client, example_award, h, prefix):
     """Test the endpoint to retrieve a single item."""
-    id_ = example_grant.id
+    id_ = example_award.id
 
     res = client.get(f"{prefix}/{id_}", headers=h)
     assert res.status_code == 200
     assert res.json["id"] == id_
     # Test links
     assert res.json["links"] == {
-        "self": "https://127.0.0.1:5000/api/grants/cern"
+        "self": "https://127.0.0.1:5000/api/awards/cern"
     }
 
 
-def test_grants_search(client, example_grant, h, prefix):
+def test_awards_search(client, example_award, h, prefix):
     """Test a successful search."""
     res = client.get(prefix, headers=h)
 
@@ -82,9 +82,9 @@ def test_grants_search(client, example_grant, h, prefix):
     assert res.json["sortBy"] == "title"
 
 
-def _create_grants(service, identity):
-    """Create dummy grants with similar names/acronyms/titles."""
-    grants = [
+def _create_awards(service, identity):
+    """Create dummy awards with similar names/acronyms/titles."""
+    awards = [
         {
             "name": "CERN",
             "title": {
@@ -112,17 +112,17 @@ def _create_grants(service, identity):
             }
         }
     ]
-    for aff in grants:
+    for aff in awards:
         service.create(identity, aff)
 
-    Grant.index.refresh()  # Refresh the index
+    Award.index.refresh()  # Refresh the index
 
 
-def test_grants_suggest_sort(
+def test_awards_suggest_sort(
     app, db, es_clear, identity, service, client, h, prefix
 ):
     """Test a successful search."""
-    _create_grants(service, identity)
+    _create_awards(service, identity)
 
     # Should show 2 results, but id=cern as first due to name sorting
     res = client.get(f"{prefix}?suggest=CERN", headers=h)

@@ -33,12 +33,7 @@ class AwardSchema(BaseVocabularySchema):
         required=True,
         validate=validate.Length(min=1, error=_('Number cannot be blank.'))
     )
-    funder = fields.Nested(
-        partial(
-            FunderRelationSchema,
-            required=True
-        )
-    )
+    funder = fields.Nested(FunderRelationSchema)
 
 
 class AwardRelationSchema(Schema):

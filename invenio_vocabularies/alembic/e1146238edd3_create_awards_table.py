@@ -41,17 +41,17 @@ def upgrade():
         sa.Column(
             'id',
             postgresql.UUID(),
-            ßautoincrement=False,
+            autoincrement=False,
             nullable=False),
         sa.Column(
             'json',
             postgresql.JSONB(astext_type=sa.Text()),
-            ßautoincrement=False,
+            autoincrement=False,
             nullable=True),
         sa.Column(
             'version_id',
             sa.INTEGER(),
-            ßautoincrement=False,
+            autoincrement=False,
             nullable=False),
         sa.PrimaryKeyConstraint('id', name='pk_award_metadata')
     )

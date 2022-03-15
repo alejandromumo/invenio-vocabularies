@@ -21,7 +21,7 @@ record_type = RecordTypeFactory(
     # Data layer
     pid_field_kwargs={
         "create": False,
-        "provider": PIDProviderFactory.create(pid_type='gra'),
+        "provider": PIDProviderFactory.create(pid_type='awa'),
         "context_cls": BaseVocabularyPIDFieldContext,
     },
     schema_version="1.0.0",

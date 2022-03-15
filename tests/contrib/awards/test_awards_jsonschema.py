@@ -36,6 +36,7 @@ def fails(data):
 def test_valid_full(appctx, schema):
     data = {
         "$schema": schema,
+        "id": "test-award",
         "identifiers": [
             {"identifier": "03yrm5c26", "scheme": "ror"}
         ],
@@ -50,7 +51,8 @@ def test_valid_full(appctx, schema):
         },
         "number": "1000",
         "funder": {
-            "id": "funder-1"
+            "id": "funder-1",
+            "name": "Test funder"
         }
     }
 

@@ -47,16 +47,16 @@ def test_awards_forbidden(
     """Test invalid type."""
     # invalid type
     award_full_data_too = deepcopy(award_full_data)
-    award_full_data_too["number"] = "other"
+    award_full_data_too["id"] = "other"
     res = client.post(
         f"{prefix}", headers=h, data=json.dumps(award_full_data_too))
     assert res.status_code == 403
 
     res = client.put(
-        f"{prefix}/cern", headers=h, data=json.dumps(award_full_data))
+        f"{prefix}/test_award", headers=h, data=json.dumps(award_full_data))
     assert res.status_code == 403
 
-    res = client.delete(f"{prefix}/cern")
+    res = client.delete(f"{prefix}/test_award")
     assert res.status_code == 403
 
 
@@ -69,7 +69,7 @@ def test_awards_get(client, example_award, h, prefix):
     assert res.json["id"] == id_
     # Test links
     assert res.json["links"] == {
-        "self": "https://127.0.0.1:5000/api/awards/cern"
+        "self": "https://127.0.0.1:5000/api/awards/test_award"
     }
 
 
@@ -79,37 +79,40 @@ def test_awards_search(client, example_award, h, prefix):
 
     assert res.status_code == 200
     assert res.json["hits"]["total"] == 1
-    assert res.json["sortBy"] == "title"
+    assert res.json["sortBy"] == "newest"
+
+    res = client.get(f"{prefix}?q=test_award", headers=h)
+
+    assert res.status_code == 200
+    assert res.json["hits"]["total"] == 1
+    assert res.json["sortBy"] == "bestmatch"
 
 
 def _create_awards(service, identity):
-    """Create dummy awards with similar names/acronyms/titles."""
+    """Create dummy awards with similar ids/numbers/titles."""
     awards = [
         {
-            "name": "CERN",
             "title": {
                 "en": "European Organization for Nuclear Research",
                 "fr": "Conseil Européen pour la Recherche Nucléaire"
-            }
+            },
+            "id": "cern-award",
+            "number": "cern-123"
         },
         {
-            "name": "OTHER",
-            "title": {
-                "en": "CERN"
-            }
-        },
-        {
-            "name": "CERT",
             "title": {
                 "en": "Computer Emergency Response Team",
                 "fr": "Équipe d'Intervention d'Urgence Informatique"
-            }
+            },
+            "id": "cert-award",
+            "number": "cert-123"
         },
         {
-            "name": "Northwestern University",
             "title": {
                 "en": "Northwestern University",
-            }
+            },
+            "id": "nu-award",
+            "number": "nu-123"
         }
     ]
     for aff in awards:
@@ -124,21 +127,27 @@ def test_awards_suggest_sort(
     """Test a successful search."""
     _create_awards(service, identity)
 
-    # Should show 2 results, but id=cern as first due to name sorting
-    res = client.get(f"{prefix}?suggest=CERN", headers=h)
+    # Should show 1 result
+    res = client.get(f"{prefix}?suggest=cern", headers=h)
     assert res.status_code == 200
-    assert res.json["hits"]["total"] == 2
-    assert res.json["hits"]["hits"][0]["name"] == "CERN"
-    assert res.json["hits"]["hits"][1]["name"] == "OTHER"
+    assert res.json["hits"]["total"] == 1
+    assert res.json["hits"]["hits"][0]["id"] == "cern-award"
 
     # Should show 1 result
     res = client.get(f"{prefix}?suggest=nucléaire", headers=h)
     assert res.status_code == 200
     assert res.json["hits"]["total"] == 1
-    assert res.json["hits"]["hits"][0]["name"] == "CERN"
+    assert res.json["hits"]["hits"][0]["id"] == "cern-award"
 
-    # Should show 2 results, but id=nu as first due to name
+    # Should show 2 results, but id=cern-award as first due to number
     res = client.get(f"{prefix}?suggest=nu", headers=h)
     assert res.status_code == 200
+    assert res.json["hits"]["total"] == 2
+    assert res.json["hits"]["hits"][0]["id"] == "cern-award"
+    assert res.json["hits"]["hits"][1]["id"] == "nu-award"
+
+    # Should show 1 result
+    res = client.get(f"{prefix}?suggest=University", headers=h)
+    assert res.status_code == 200
     assert res.json["hits"]["total"] == 1
-    assert res.json["hits"]["hits"][0]["id"] == "cern"  # due to nucleaire
+    assert res.json["hits"]["hits"][0]["id"] == "nu-award"

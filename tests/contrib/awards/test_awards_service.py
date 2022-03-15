@@ -20,15 +20,15 @@ def test_simple_flow(app, db, service, identity, award_full_data):
     """Test a simple vocabulary service flow."""
     # Create it
     item = service.create(identity, award_full_data)
-    number = item.number
+    id_ = item.id
 
-    assert item.number == award_full_data['number']
+    assert id_ == award_full_data['id']
     for k, v in award_full_data.items():
         assert item.data[k] == v
 
     # Read it
-    read_item = service.read(identity, 'cern')
-    assert item.number == read_item.number
+    read_item = service.read(identity, 'test_award')
+    assert item.id == read_item.id
     assert item.data == read_item.data
 
     # Refresh index to make changes live.
@@ -36,29 +36,29 @@ def test_simple_flow(app, db, service, identity, award_full_data):
 
     # Search it
     res = service.search(
-        identity, q=f"number:{number}", size=25, page=1)
+        identity, q=f"id:{id_}", size=25, page=1)
     assert res.total == 1
     assert list(res.hits)[0] == read_item.data
 
     # Update it
     data = read_item.data
     data['title']['en'] = 'New title'
-    update_item = service.update(identity, number, data)
-    assert item.number == update_item.number
+    update_item = service.update(identity, id_, data)
+    assert item.id == update_item.id
     assert update_item['title']['en'] == 'New title'
 
     # Delete it
-    assert service.delete(identity, number)
+    assert service.delete(identity, id_)
 
     # Refresh to make changes live
     Award.index.refresh()
 
     # Fail to retrieve it
     # - db
-    pytest.raises(PIDDeletedError, service.read, identity, number)
+    pytest.raises(PIDDeletedError, service.read, identity, id_)
     # - search
     res = service.search(
-        identity, q=f"number:{number}", size=25, page=1)
+        identity, q=f"id:{id_}", size=25, page=1)
     assert res.total == 0
 
 

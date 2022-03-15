@@ -7,6 +7,10 @@
     "$schema": {
       "$ref": "local://definitions-v1.0.0.json#/$schema"
     },
+    "id": {
+      "$ref": "local://definitions-v1.0.0.json#/identifier",
+      "description": "Represents the award's id."
+    },
     "identifiers": {
       "description": "Alternate identifiers for the award.",
       "type": "array",
@@ -31,6 +35,9 @@
       "properties": {
         "id": {
           "$ref": "local://definitions-v1.0.0.json#/identifier"
+        },
+        "name": {
+          "type": "string"
         }
       }
     }

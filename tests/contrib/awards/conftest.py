@@ -14,10 +14,10 @@ fixtures are available.
 
 import pytest
 
-from invenio_vocabularies.contrib.awards.resources import \
-    AwardsResource, AwardsResourceConfig
-from invenio_vocabularies.contrib.awards.services import \
-    AwardsService, AwardsServiceConfig
+from invenio_vocabularies.contrib.awards.resources import AwardsResource, \
+    AwardsResourceConfig
+from invenio_vocabularies.contrib.awards.services import AwardsService, \
+    AwardsServiceConfig
 
 
 @pytest.fixture(scope="module")
@@ -42,21 +42,17 @@ def extra_entry_points():
 def award_full_data():
     """Full award data."""
     return {
+        "id": "test_award",
         "identifiers": [
             {"identifier": "03yrm5c26", "scheme": "ror"}
         ],
-        "pid": {
-            "pk": 1,
-            "status": "R",
-            "pid_type": "affid",
-            "obj_type": "aff"
-        },
         "title": {
             "en": "Test award"
         },
         "number": "B1000",
         "funder": {
-            "id": "funder-1"
+            "id": "funder-1",
+            "name": "Test funder"
         }
     }
 

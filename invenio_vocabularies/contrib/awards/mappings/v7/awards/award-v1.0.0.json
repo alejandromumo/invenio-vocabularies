@@ -9,6 +9,9 @@
       "created": {
         "type": "date"
       },
+      "id": {
+        "type": "keyword"
+      },
       "updated": {
         "type": "date"
       },

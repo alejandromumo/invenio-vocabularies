@@ -85,23 +85,11 @@ AWARD = {
     "title": {
         "en": "Some award"
     },
-    "number": "100",
-    "identifiers": [
-        {
-            "identifier": "10.5281/zenodo.9999999",
-            "scheme": "doi"
-        }
-    ]
+    "number": "100"
 }
 
 FUNDER = {
-    "name": "Someone",
-    "identifiers": [
-        {
-            "identifier": "10.5281/zenodo.9999999",
-            "scheme": "doi"
-        }
-    ]
+    "name": "Someone"
 }
 
 

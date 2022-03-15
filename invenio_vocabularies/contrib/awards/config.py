@@ -26,39 +26,14 @@ award_schemes = LocalProxy(
 class AwardsSearchOptions(SearchOptions):
     """Search options."""
 
-    # QUESTION ask alex about what's useful for the domain
-    # QUESTION mappings number either a text or keyword
     suggest_parser_cls = SuggestQueryParser.factory(
         fields=[
             'title.*^50',
             'title.*._2gram',
             'title.*._3gram',
-            'number^10',
-            'funder.name^5',
-            'funder.name._2gram',
-            'funder.name._3gram',
+            'number^10'
         ],
     )
-
-    sort_default = 'bestmatch'
-
-    sort_default_no_query = 'name'
-
-    sort_options = {
-        "bestmatch": dict(
-            title=_('Best match'),
-            fields=['_score'],  # ES defaults to desc on `_score` field
-        ),
-        # QUESTION ask alex about what's useful for the domain. Either number or nothing at all and assume defaults from SearchOptions parent object?
-        "newest": dict(
-            title=_('Newest'),
-            fields=['-created'],
-        ),
-        "oldest": dict(
-            title=_('Oldest'),
-            fields=['created'],
-        ),
-    }
 
 
 service_components = [

@@ -16,7 +16,7 @@ from marshmallow_utils.fields import IdentifierSet, SanitizedUnicode
 from marshmallow_utils.schemas import IdentifierSchema
 
 from .config import award_schemes
-from ..funders.schema import FunderRelationSchema, FunderSchema
+from ..funders.schema import FunderRelationSchema
 from ...services.schema import BaseVocabularySchema, i18n_strings
 
 
@@ -33,8 +33,12 @@ class AwardSchema(BaseVocabularySchema):
         required=True,
         validate=validate.Length(min=1, error=_('Number cannot be blank.'))
     )
-    # QUESTION optional for now? everything here seems required
-    funder = fields.Nested(FunderSchema)
+    funder = fields.Nested(
+        partial(
+            FunderRelationSchema,
+            required=True
+        )
+    )
 
 
 class AwardRelationSchema(Schema):
